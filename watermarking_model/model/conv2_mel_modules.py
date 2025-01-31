@@ -69,11 +69,14 @@ def save_waveform(a_tensor, flag='original'):
 
 
 def get_vocoder(device):
-    with open("hifigan/config.json", "r") as f:
+    import os
+    json_path = os.path.join(os.path.dirname(__file__), '../hifigan/config.json')
+    with open(json_path, "r") as f:
         config = json.load(f)
     config = hifigan.AttrDict(config)
     vocoder = hifigan.Generator(config)
-    ckpt = torch.load("./hifigan/model/VCTK_V1/generator_v1")
+    ckpt_path = os.path.join(os.path.dirname(__file__), '../hifigan/model/VCTK_V1/generator_v1')
+    ckpt = torch.load(ckpt_path)
     vocoder.load_state_dict(ckpt["generator"])
     vocoder.eval()
     vocoder.remove_weight_norm()
